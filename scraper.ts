@@ -34,29 +34,34 @@ const scraper = async (city: string) => {
 
   await Promise.all([await page.click("h3"), await page.waitForNavigation()]);
 
-  const data = await page.$$eval("article", (articles) => {
-    return articles.map((article) => {
+  const data = await page.evaluate(() => {
+    const items = document.querySelectorAll("article");
+    const houseItems = Array.from(items).map((item) => {
       const price = (
-        article.querySelector(
-          "[data-test='property-card-price']"
+        item.querySelector("[data-test='property-card-price']") as HTMLElement
+      )?.innerText;
+      const address = (item.querySelector("address") as HTMLElement)?.innerText;
+
+      const special = (
+        item.querySelector(
+          "div[class^='StyledPropertyCardBadge']"
         ) as HTMLElement
       )?.innerText;
-      const address = (article.querySelector("address") as HTMLElement)
-        ?.innerText;
 
-      const details: Record<string, string> = {};
-      article
+      const specifications: Record<string, string> = {};
+      item
         .querySelectorAll("ul[class^='StyledPropertyCardHomeDetailsList'] li")
         .forEach((ele) => {
-          const key = ele.querySelector("abbr")?.innerText;
+          const attribute = ele.querySelector("abbr")?.innerText;
           const value = ele.querySelector("b")?.innerText;
-          if (key && value) {
-            details[key] = value;
+          if (attribute && value) {
+            specifications[attribute] = value;
           }
         });
 
-      return { price, address, details };
+      return { price, address, specifications, special };
     });
+    return houseItems;
   });
 
   console.log(data);
@@ -64,5 +69,5 @@ const scraper = async (city: string) => {
   return data;
 };
 
-// scraper("San Jose");
+scraper("San Jose");
 export default scraper;
