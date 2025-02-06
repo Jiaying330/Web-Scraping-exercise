@@ -7,7 +7,7 @@ const launchBrowser = async (): Promise<Browser> => {
 const navigateToBing = async (page: Page, city: string): Promise<void> => {
   await page.goto("https://www.bing.com");
   await page.waitForSelector("textarea[name=q]");
-  await page.type("textarea[name=q]", `site:zillow.com homes in ${city}`, {
+  await page.type("textarea[name=q]", `site:zillow.com ${city} homes`, {
     delay: 10,
   });
   await Promise.all([page.keyboard.press("Enter"), page.waitForNavigation()]);
@@ -31,7 +31,7 @@ const scrollToBottom = async (page: Page): Promise<void> => {
   await page.evaluate(async () => {
     await new Promise<void>((resolve) => {
       let totalHeight = 0;
-      const distance = 100;
+      const distance = 800;
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight;
         window.scrollBy(0, distance);

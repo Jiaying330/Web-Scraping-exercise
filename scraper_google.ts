@@ -14,15 +14,13 @@ const scraper = async (city: string) => {
   });
   const page = await browser.newPage();
   await page.goto("https://www.google.com");
-  await page.type("textarea[name=q]", `site:zillow.com homes in ${city}`);
+  await page.type("textarea[name=q]", `site:zillow.com ${city} homes`);
   await Promise.all([
     await page.keyboard.press("Enter"),
     await page.waitForNavigation(),
   ]);
 
-  console.log(
-    "Please complete the reCAPTCHA verification before continuing..."
-  );
+  console.log("Please complete the reCAPTCHA verification");
 
   await new Promise<void>((resolve) => {
     io.question("", () => {
@@ -30,9 +28,26 @@ const scraper = async (city: string) => {
     });
   });
 
-  console.log("reCAPTCHA is resolved, please continue...");
+  console.log("reCAPTCHA resolved");
 
   await Promise.all([await page.click("h3"), await page.waitForNavigation()]);
+
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve) => {
+      let totalHeight = 0;
+      const distance = 800;
+      const timer = setInterval(() => {
+        const scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+
+        if (totalHeight >= scrollHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 100);
+    });
+  });
 
   const data = await page.evaluate(() => {
     const items = document.querySelectorAll("article");

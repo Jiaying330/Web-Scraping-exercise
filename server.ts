@@ -21,7 +21,7 @@ app.post("/scrape", async (req: Request, res: Response) => {
       status: "success",
       results: listings.length,
       data: {
-        data: listings,
+        listings,
       },
     });
   } catch (error) {

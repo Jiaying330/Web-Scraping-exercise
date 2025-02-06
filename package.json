@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx tsx server.ts",
-    "dev:google": "npx tsx scraper.ts",
+    "dev:google": "npx tsx scraper_google.ts",
     "dev": "npx tsx scraper_bing.ts"
   },
   "keywords": [],
