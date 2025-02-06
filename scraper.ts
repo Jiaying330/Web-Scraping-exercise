@@ -64,6 +64,5 @@ const scraper = async (city: string) => {
   return data;
 };
 
-scraper("San Jose");
-
+// scraper("San Jose");
 export default scraper;
