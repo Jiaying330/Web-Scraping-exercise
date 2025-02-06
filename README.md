@@ -19,7 +19,7 @@ npm start
 ### **Test the API using Postman:**
 Send a **POST request** to:
 ```
-http://localhost:5000/scrape
+http://localhost:3000/scrape
 ```
 
 #### **Request Body (JSON):**
